@@ -1,0 +1,26 @@
+Asset ID,Category,Asset name,QR value
+WC-001,Patient Transport,Wheelchair,ASSET:WC-001
+WC-002,Patient Transport,Wheelchair,ASSET:WC-002
+WC-003,Patient Transport,Wheelchair,ASSET:WC-003
+WC-004,Patient Transport,Wheelchair,ASSET:WC-004
+WC-005,Patient Transport,Wheelchair,ASSET:WC-005
+OXY-001,Respiratory Equipment,Oxygen Cylinder,ASSET:OXY-001
+OXY-002,Respiratory Equipment,Oxygen Cylinder,ASSET:OXY-002
+OXY-003,Respiratory Equipment,Oxygen Cylinder,ASSET:OXY-003
+OXY-004,Respiratory Equipment,Oxygen Cylinder,ASSET:OXY-004
+OXY-005,Respiratory Equipment,Oxygen Cylinder,ASSET:OXY-005
+STR-001,Patient Transport,Patient Stretcher,ASSET:STR-001
+STR-002,Patient Transport,Patient Stretcher,ASSET:STR-002
+STR-003,Patient Transport,Patient Stretcher,ASSET:STR-003
+STR-004,Patient Transport,Patient Stretcher,ASSET:STR-004
+STR-005,Patient Transport,Patient Stretcher,ASSET:STR-005
+IP-001,Infusion Equipment,Infusion Pump,ASSET:IP-001
+IP-002,Infusion Equipment,Infusion Pump,ASSET:IP-002
+IP-003,Infusion Equipment,Infusion Pump,ASSET:IP-003
+IP-004,Infusion Equipment,Infusion Pump,ASSET:IP-004
+IP-005,Infusion Equipment,Infusion Pump,ASSET:IP-005
+PPM-001,Patient Monitoring,Portable Patient Monitor,ASSET:PPM-001
+PPM-002,Patient Monitoring,Portable Patient Monitor,ASSET:PPM-002
+PPM-003,Patient Monitoring,Portable Patient Monitor,ASSET:PPM-003
+PPM-004,Patient Monitoring,Portable Patient Monitor,ASSET:PPM-004
+PPM-005,Patient Monitoring,Portable Patient Monitor,ASSET:PPM-005

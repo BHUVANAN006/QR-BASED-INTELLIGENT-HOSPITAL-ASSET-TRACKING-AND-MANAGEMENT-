@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Office Dashboard{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">Office portal</p>
+  <h1>Current asset overview</h1>
+  <p>Realtime operational view of available, in-use, delayed and maintenance assets.</p>
+</div>
+
+<div class="quick-actions">
+  <a class="action-card" href="{{ url_for('assets_page') }}">🧰<span>Assets</span></a>
+  <a class="action-card" href="{{ url_for('qrcodes_page') }}">▦<span>QR codes</span></a>
+  <a class="action-card" href="{{ url_for('messages') }}">💬<span>Messages</span></a>
+  <a class="action-card danger" href="{{ url_for('emergency') }}">🚨<span>Emergency</span></a>
+</div>
+
+<section class="panel">
+  <div class="section-title">
+    <h2>Asset counts</h2>
+    <a href="{{ url_for('transaction_report', hours=48) }}">Download last 48 hours</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Category</th><th>Asset</th><th>Total</th><th>Available</th><th>In use</th><th>Maintenance</th><th>Delayed</th><th>Minimum</th></tr></thead>
+      <tbody>
+      {% for row in summaries %}
+      <tr class="{{ 'low-row' if row.available < row.minimum_available else '' }}">
+        <td>{{ row.category }}</td><td>{{ row.name }}</td><td>{{ row.total }}</td>
+        <td>{{ row.available }}</td><td>{{ row.in_use }}</td><td>{{ row.maintenance }}</td>
+        <td>{{ row.delayed }}</td><td>{{ row.minimum_available }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="detail-grid">
+<section class="panel">
+  <h2>Create employee account</h2>
+  <form method="post" action="{{ url_for('add_employee') }}" class="stack-form">
+    <label>Employee ID<input name="employee_id" required></label>
+    <label>Employee name<input name="employee_name" required></label>
+    <label>Department<input name="department" required></label>
+    <label>Phone number<input name="phone_number"></label>
+    <label>Role<select name="role"><option value="staff">Nurse / Staff</option><option value="office">Office</option><option value="management">Management</option></select></label>
+    <label>Temporary password<input type="password" name="password" minlength="8" required></label>
+    <button class="primary">Create account</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>Employees</h2>
+  <div class="compact-list">
+    {% for employee in employees %}
+    <div><strong>{{ employee.employee_name }}</strong><span>{{ employee.employee_id }} · {{ employee.role }} · {{ employee.department }}</span></div>
+    {% endfor %}
+  </div>
+</section>
+</div>
+
+<section class="panel">
+  <h2>Recent incoming messages</h2>
+  {% if messages %}
+  <div class="list">
+    {% for message in messages %}
+    <div class="list-item priority-{{ message.priority }}">
+      <strong>{{ message.subject or 'Message' }} · {{ message.sender_name }}</strong>
+      <p>{{ message.message_text }}</p><small>{{ message.created_at }}</small>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}<p class="empty">No messages received.</p>{% endif %}
+</section>
+{% endblock %}

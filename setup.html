@@ -1,0 +1,27 @@
+
+{% extends "base.html" %}
+{% block title %}Initial Setup{% endblock %}
+{% block content %}
+<div class="setup-wrap">
+  <div class="page-heading">
+    <p class="eyebrow">One-time setup</p>
+    <h1>Create the first Office and Management accounts</h1>
+    <p>No usernames or passwords are preloaded. Create your own secure IDs below.</p>
+  </div>
+  <form method="post" class="two-column-form">
+    <section class="panel">
+      <h2>Office account</h2>
+      <label>User ID<input name="office_id" required></label>
+      <label>Full name<input name="office_name" required></label>
+      <label>Password<input type="password" name="office_password" minlength="8" required></label>
+    </section>
+    <section class="panel">
+      <h2>Management account</h2>
+      <label>User ID<input name="management_id" required></label>
+      <label>Full name<input name="management_name" required></label>
+      <label>Password<input type="password" name="management_password" minlength="8" required></label>
+    </section>
+    <button class="primary full-span" type="submit">Complete setup</button>
+  </form>
+</div>
+{% endblock %}

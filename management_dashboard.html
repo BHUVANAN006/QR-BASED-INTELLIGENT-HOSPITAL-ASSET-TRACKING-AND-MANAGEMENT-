@@ -1,0 +1,42 @@
+
+{% extends "base.html" %}
+{% block title %}Management Dashboard{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{% endblock %}
+{% block content %}
+<div class="page-heading"><p class="eyebrow">Management portal</p><h1>Hospital asset analytics</h1><p>Operational performance, usage and emergency overview.</p></div>
+<div class="metric-grid">
+  <div class="metric"><span>Total assets</span><strong>{{ totals.total or 0 }}</strong></div>
+  <div class="metric"><span>Available</span><strong>{{ totals.available or 0 }}</strong></div>
+  <div class="metric"><span>In use</span><strong>{{ totals.in_use or 0 }}</strong></div>
+  <div class="metric"><span>Maintenance</span><strong>{{ totals.maintenance or 0 }}</strong></div>
+  <div class="metric"><span>Delayed</span><strong>{{ totals.delayed or 0 }}</strong></div>
+  <div class="metric"><span>Missing</span><strong>{{ totals.missing or 0 }}</strong></div>
+</div>
+<div class="detail-grid">
+<section class="panel"><h2>Assets by category</h2><canvas id="categoryChart"></canvas></section>
+<section class="panel"><h2>Transactions in the last 48 hours</h2><canvas id="activityChart"></canvas></section>
+</div>
+<section class="panel">
+  <div class="section-title"><h2>Reports</h2><a href="{{ url_for('transaction_report', hours=48) }}">Download 48-hour CSV</a></div>
+</section>
+<section class="panel">
+  <h2>Recent emergency history</h2>
+  {% if emergencies %}
+  <div class="table-wrap"><table><thead><tr><th>Type</th><th>Reported by</th><th>Location</th><th>Status</th><th>Time</th></tr></thead>
+  <tbody>{% for e in emergencies %}<tr><td>{{ e.emergency_type }}</td><td>{{ e.employee_name }} ({{ e.employee_id }})</td><td>{{ e.location_code or '-' }}</td><td>{{ e.status }}</td><td>{{ e.created_at }}</td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<p class="empty">No emergency records.</p>{% endif %}
+</section>
+<script>
+const categoryLabels = {{ categories|map(attribute='category')|list|tojson }};
+const categoryAvailable = {{ categories|map(attribute='available')|list|tojson }};
+const categoryInUse = {{ categories|map(attribute='in_use')|list|tojson }};
+new Chart(document.getElementById("categoryChart"), {type:"bar",data:{labels:categoryLabels,datasets:[
+  {label:"Available",data:categoryAvailable},{label:"In use",data:categoryInUse}
+]},options:{responsive:true,scales:{y:{beginAtZero:true}}}});
+const activityLabels = {{ activity|map(attribute='hour')|list|tojson }};
+const activityData = {{ activity|map(attribute='total')|list|tojson }};
+new Chart(document.getElementById("activityChart"), {type:"line",data:{labels:activityLabels,datasets:[
+  {label:"Transactions",data:activityData,tension:.25}
+]},options:{responsive:true,scales:{y:{beginAtZero:true}}}});
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+
+{% extends "base.html" %}
+{% block title %}Emergency Alert{% endblock %}
+{% block content %}
+<div class="page-heading emergency-heading"><p class="eyebrow">Emergency broadcast</p><h1>Send an alert to everyone</h1><p>The alert is shown on every active portal with sound and supported-device vibration.</p></div>
+<div class="detail-grid">
+<section class="panel">
+  <h2>Report emergency</h2>
+  <form method="post" class="stack-form">
+    <label>Emergency type<select name="emergency_type" required><option value="">Select</option><option>Fire</option><option>Medical emergency</option><option>Oxygen leakage</option><option>Electrical emergency</option><option>Security emergency</option><option>Equipment failure</option><option>Other emergency</option></select></label>
+    <label>Location<select name="location_code"><option value="">Not selected</option>{% for l in locations %}<option value="{{ l.code }}">{{ l.name }}</option>{% endfor %}</select></label>
+    <label>Details (optional)<textarea name="description" rows="5" placeholder="Add short information when needed"></textarea></label>
+    <button class="danger-button large">SEND EMERGENCY ALERT</button>
+  </form>
+</section>
+<section class="panel">
+  <h2>Active alerts</h2>
+  {% if active %}<div class="list">{% for e in active %}
+  <div class="list-item emergency-item"><strong>{{ e.emergency_type }}</strong><p>{{ e.description }}</p><small>{{ e.employee_name }} · {{ e.location_code or 'Location not selected' }} · {{ e.created_at }}</small>
+    <form method="post" action="{{ url_for('acknowledge_emergency', emergency_id=e.id) }}" class="ack-row two-alert-actions">
+      <button name="response" value="cleared" class="secondary">I CLEARED MY AREA</button>
+      <button name="response" value="need_help" class="danger-button">I NEED HELP — MORE PATIENTS ARE HERE</button>
+    </form>
+    {% if logged_user.role in ['office','management'] %}<form method="post" action="{{ url_for('close_emergency', emergency_id=e.id) }}"><button class="danger-button">Close alert</button></form>{% endif %}
+  </div>{% endfor %}</div>{% else %}<p class="empty">No active emergencies.</p>{% endif %}
+</section>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="page-heading"><p class="eyebrow">Communication</p><h1>Messages</h1><p>Send operational messages between staff, office and management.</p></div>
+<div class="detail-grid">
+<section class="panel">
+  <h2>Send message</h2>
+  <form method="post" class="stack-form">
+    {% if logged_user.role != 'staff' %}
+    <label>Send to role<select name="receiver_role"><option value="">Individual user</option><option value="staff">All staff</option><option value="office">Office</option><option value="management">Management</option><option value="all">Everyone</option></select></label>
+    <label>Individual user<select name="receiver_user_id"><option value="">None</option>{% for r in recipients %}<option value="{{ r.id }}">{{ r.employee_name }} · {{ r.employee_id }} · {{ r.role }}</option>{% endfor %}</select></label>
+    {% else %}<p class="note">Your message will be sent to the Office portal.</p>{% endif %}
+    <label>Priority<select name="priority"><option value="normal">Normal</option><option value="urgent">Urgent</option><option value="emergency">Emergency</option></select></label>
+    <label>Subject<input name="subject"></label>
+    <label>Message<textarea name="message_text" rows="5" required></textarea></label>
+    <button class="primary">Send message</button>
+  </form>
+</section>
+<section class="panel">
+  <h2>Inbox</h2>
+  {% if inbox %}<div class="list">{% for m in inbox %}<div class="list-item priority-{{ m.priority }}"><strong>{{ m.subject or 'Message' }}</strong><p>{{ m.message_text }}</p><small>From {{ m.sender_name }} · {{ m.created_at }}</small></div>{% endfor %}</div>
+  {% else %}<p class="empty">No messages.</p>{% endif %}
+</section>
+</div>
+<section class="panel"><h2>Sent messages</h2>
+{% if sent %}<div class="list">{% for m in sent %}<div class="list-item"><strong>{{ m.subject or 'Message' }}</strong><p>{{ m.message_text }}</p><small>{{ m.created_at }}</small></div>{% endfor %}</div>{% else %}<p class="empty">No sent messages.</p>{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+{% block title %}Staff Dashboard{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">Staff portal</p>
+  <h1>Welcome, {{ logged_user.employee_name }}</h1>
+  <p>{{ logged_user.department }} · {{ logged_user.employee_id }}</p>
+</div>
+
+<div class="quick-actions">
+  <a class="action-card" href="{{ url_for('scan') }}">📷<span>Scan asset QR</span></a>
+  <a class="action-card" href="{{ url_for('messages') }}">💬<span>Messages</span></a>
+  <a class="action-card danger" href="{{ url_for('emergency') }}">🚨<span>Emergency</span></a>
+</div>
+
+{% if return_requests %}
+<section class="panel warning-panel">
+  <h2>Return requests</h2>
+  {% for item in return_requests %}
+  <div class="request-card">
+    <div>
+      <strong>{{ item.type_name }} · {{ item.asset_uid }}</strong>
+      {% if item.response == 'returning' %}
+      <p>Return promised by {{ item.promised_return_at }}</p>
+      {% else %}
+      <p>Availability is low. Confirm whether you still need this asset.</p>
+      {% endif %}
+    </div>
+    {% if item.response == 'pending' %}
+    <form method="post" action="{{ url_for('respond_return_request', request_id=item.id) }}" class="inline-response">
+      <input name="reason" placeholder="Reason when selecting NEED">
+      <button name="response" value="need" class="secondary">NEED</button>
+      <button name="response" value="returning" class="primary">RETURN IN 10 MIN</button>
+    </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="panel">
+  <div class="section-title"><h2>Assets currently in your hand</h2><a href="{{ url_for('scan') }}">Scan another</a></div>
+  {% if assigned %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>Type</th><th>Location</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+      {% for asset in assigned %}
+      <tr>
+        <td>{{ asset.asset_uid }}</td><td>{{ asset.type_name }}</td>
+        <td>{{ asset.location_name or '-' }}</td><td><span class="status {{ asset.status }}">{{ asset.status|replace('_',' ') }}</span></td>
+        <td><a class="table-link" href="{{ url_for('asset_detail', asset_uid=asset.asset_uid) }}">Open</a></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="empty">No assets are assigned to you.</p>{% endif %}
+</section>
+
+<section class="panel">
+  <h2>Recent notifications</h2>
+  {% if notifications %}
+  <div class="list">
+    {% for n in notifications %}
+    <div class="list-item"><strong>{{ n.title }}</strong><p>{{ n.message }}</p><small>{{ n.created_at }}</small></div>
+    {% endfor %}
+  </div>
+  {% else %}<p class="empty">No notifications.</p>{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Scan QR Code{% endblock %}
+{% block head %}
+<script src="https://unpkg.com/html5-qrcode" defer></script>
+{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">QR tracking</p>
+  <h1>Scan an asset QR code</h1>
+  <p>Use a secure HTTPS link on mobile for live camera access. Manual entry is also available.</p>
+</div>
+
+<div class="scan-layout">
+  <section class="panel">
+    <div id="reader" class="qr-reader"></div>
+    <p id="scanStatus" class="muted">If the camera does not open on mobile, run START_SECURE_MOBILE_LINK.bat and open the HTTPS link.</p>
+  </section>
+  <section class="panel">
+    <h2>Manual asset entry</h2>
+    <form id="manualScanForm" class="stack-form">
+      <label>Asset ID or QR value<input id="manualCode" placeholder="Example: WC-001" required></label>
+      <button class="primary" type="submit">Open asset</button>
+    </form>
+  </section>
+</div>
+<script>
+window.addEventListener("load", () => {
+  const openCode = (raw) => {
+    const code = raw.trim().toUpperCase().replace("ASSET:", "");
+    if (code) window.location.href = "/asset/" + encodeURIComponent(code);
+  };
+  document.getElementById("manualScanForm").addEventListener("submit", e => {
+    e.preventDefault(); openCode(document.getElementById("manualCode").value);
+  });
+  if (window.Html5QrcodeScanner) {
+    const scanner = new Html5QrcodeScanner("reader", {fps: 10, qrbox: {width: 240, height: 240}}, false);
+    scanner.render((decodedText) => { scanner.clear(); openCode(decodedText); },
+      () => {});
+  } else {
+    document.getElementById("scanStatus").textContent = "Camera library could not load. Use manual entry.";
+  }
+});
+</script>
+{% endblock %}

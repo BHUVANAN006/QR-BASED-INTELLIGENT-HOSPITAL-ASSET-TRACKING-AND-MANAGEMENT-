@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+{% block title %}{{ role|title }} Login{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <a class="back-link" href="{{ url_for('home') }}">← Back</a>
+  <h1>{{ 'Nurse & Staff' if role == 'staff' else role|title }} Login</h1>
+  <form method="post" class="stack-form">
+    <label>User ID<input name="employee_id" required autocomplete="username"></label>
+    <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="primary" type="submit">Login</button>
+  </form>
+</div>
+{% endblock %}

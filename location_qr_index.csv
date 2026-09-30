@@ -1,0 +1,22 @@
+Location code,Location name,Department,Type,QR value
+LOC-MAIN-ASSET-STORE,Main Asset Store,Administration,asset_store,LOCATION:MAIN-ASSET-STORE
+LOC-WHEELCHAIR-PARKING,Main Wheelchair Parking,Administration,parking_station,LOCATION:WHEELCHAIR-PARKING
+LOC-MAIN-ENTRANCE,Main Hospital Entrance,Administration,entrance,LOCATION:MAIN-ENTRANCE
+LOC-EMERGENCY,Emergency Room,Emergency,room,LOCATION:EMERGENCY
+LOC-ICU-01,ICU 1,Intensive Care Unit,room,LOCATION:ICU-01
+LOC-ICU-02,ICU 2,Intensive Care Unit,room,LOCATION:ICU-02
+LOC-NICU,NICU,Neonatal Intensive Care Unit,room,LOCATION:NICU
+LOC-CCU,CCU,Critical Care Unit,room,LOCATION:CCU
+LOC-OT-01,Operation Theatre 1,Operation Theatre,room,LOCATION:OT-01
+LOC-OT-02,Operation Theatre 2,Operation Theatre,room,LOCATION:OT-02
+LOC-WARD-01,General Ward 1,General Ward,room,LOCATION:WARD-01
+LOC-WARD-02,General Ward 2,General Ward,room,LOCATION:WARD-02
+LOC-OPD,Outpatient Department,OP Department,room,LOCATION:OPD
+LOC-PHARMACY,Pharmacy,Pharmacy,room,LOCATION:PHARMACY
+LOC-LAB,Laboratory,Laboratory,room,LOCATION:LAB
+LOC-RADIOLOGY,Radiology Room,Radiology,room,LOCATION:RADIOLOGY
+LOC-BLOOD-BANK,Blood Bank,Blood Bank,room,LOCATION:BLOOD-BANK
+LOC-DIALYSIS,Dialysis Room,Dialysis,room,LOCATION:DIALYSIS
+LOC-PHYSIOTHERAPY,Physiotherapy Room,Physiotherapy,room,LOCATION:PHYSIOTHERAPY
+LOC-AMBULANCE-BAY,Ambulance Parking Bay,Ambulance,parking_station,LOCATION:AMBULANCE-BAY
+LOC-MAINTENANCE,Maintenance Room,Maintenance,maintenance,LOCATION:MAINTENANCE

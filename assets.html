@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Assets{% endblock %}
+{% block content %}
+<div class="page-heading heading-with-action">
+  <div>
+    <p class="eyebrow">Office portal</p>
+    <h1>Hospital assets</h1>
+    <p>Search components, open an item and view its full history.</p>
+  </div>
+  <a class="primary button-link" href="#create-asset">Create New Asset</a>
+</div>
+
+<section class="panel">
+  <div class="section-title asset-search-title">
+    <h2>Registered assets</h2>
+    <input id="assetSearch" class="search-input" type="search" placeholder="Search asset component, category, ID, location or holder">
+  </div>
+  <div class="table-wrap">
+    <table id="assetTable">
+      <thead><tr><th>Asset ID</th><th>Category</th><th>Type</th><th>Location</th><th>Holder</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      {% for a in assets %}
+      <tr><td>{{ a.asset_uid }}</td><td>{{ a.category }}</td><td>{{ a.type_name }}</td><td>{{ a.location_name or '-' }}</td>
+      <td>{{ a.holder_name or '-' }}{% if a.holder_employee_id %} ({{ a.holder_employee_id }}){% endif %}</td>
+      <td><span class="status {{ a.status }}">{{ a.status|replace('_',' ') }}</span></td>
+      <td><a class="table-link" href="{{ url_for('asset_detail', asset_uid=a.asset_uid) }}">Open</a></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p id="noAssetResults" class="empty hidden">No matching assets found.</p>
+</section>
+
+<section class="panel" id="create-asset">
+  <h2>Create New Asset</h2>
+  <p class="note">Enter the asset category, asset name, asset ID and location. A QR code is generated automatically.</p>
+  <form method="post" action="{{ url_for('add_asset') }}" class="create-asset-form">
+    <label>Asset category<input name="category" placeholder="Example: Patient Transport" required></label>
+    <label>Asset name<input name="asset_name" placeholder="Example: Wheelchair" required></label>
+    <label>Asset code prefix<input name="type_code" placeholder="Example: WC"></label>
+    <label>QR / asset ID<input name="asset_uid" placeholder="Example: WC-006" required></label>
+    <label>Default location<select name="location_id">{% for l in locations %}<option value="{{ l.id }}">{{ l.name }}</option>{% endfor %}</select></label>
+    <label>Minimum alert count<input name="minimum_available" type="number" min="1" value="2"></label>
+    <label>Return time (minutes)<input name="return_minutes" type="number" min="1" value="10"></label>
+    <button class="primary">Create asset</button>
+  </form>
+</section>
+
+<script>
+(() => {
+  const input = document.getElementById("assetSearch");
+  const rows = [...document.querySelectorAll("#assetTable tbody tr")];
+  const empty = document.getElementById("noAssetResults");
+  input.addEventListener("input", () => {
+    const query = input.value.trim().toLowerCase();
+    let visible = 0;
+    rows.forEach(row => {
+      const show = row.textContent.toLowerCase().includes(query);
+      row.style.display = show ? "" : "none";
+      if (show) visible++;
+    });
+    empty.classList.toggle("hidden", visible !== 0);
+  });
+})();
+</script>
+{% endblock %}

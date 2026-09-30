@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+{% block title %}QR Codes{% endblock %}
+{% block content %}
+<div class="page-heading"><p class="eyebrow">Office portal</p><h1>Printable QR codes</h1><p>Print and attach asset QR codes. Place location QR codes at rooms and parking stations.</p></div>
+<section class="panel">
+  <h2>Location QR codes</h2>
+  <div class="qr-grid">
+    {% for l in locations %}
+    <div class="qr-card"><img src="{{ url_for('location_qr_file', filename=l.code + '.png') }}"><strong>{{ l.name }}</strong><small>{{ l.code }}</small></div>
+    {% endfor %}
+  </div>
+</section>
+<section class="panel">
+  <h2>Asset QR codes</h2>
+  <div class="qr-grid">
+    {% for a in assets %}
+    <div class="qr-card"><img loading="lazy" src="{{ url_for('asset_qr_file', filename=a.asset_uid + '.png') }}"><strong>{{ a.asset_uid }}</strong></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}{{ asset.asset_uid }}{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">Asset history</p>
+  <h1>{{ asset.type_name }} · {{ asset.asset_uid }}</h1>
+  <p>Current status: <span class="status {{ asset.status }}">{{ asset.status|replace('_',' ') }}</span></p>
+</div>
+<div class="detail-grid">
+  <section class="panel">
+    <h2>Current details</h2>
+    <dl class="details">
+      <dt>Category</dt><dd>{{ asset.category if asset.category is defined else '-' }}</dd>
+      <dt>Location</dt><dd>{{ asset.location_name or '-' }}</dd>
+      <dt>Current holder</dt><dd>{{ asset.holder_name or 'Not assigned' }}{% if asset.holder_employee_id %} ({{ asset.holder_employee_id }}){% endif %}</dd>
+      <dt>Taken time</dt><dd>{{ asset.taken_at or '-' }}</dd>
+      <dt>Expected return</dt><dd>{{ asset.expected_return_at or '-' }}</dd>
+      <dt>Condition</dt><dd>{{ asset.condition_status|replace('_',' ') }}</dd>
+    </dl>
+  </section>
+  <section class="panel">
+    <h2>Update asset</h2>
+    <form method="post" class="stack-form">
+      <label>Location
+        <select name="location_id">
+          {% for location in locations %}
+          <option value="{{ location.id }}" {% if asset.current_location_id == location.id %}selected{% endif %}>{{ location.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Reason / note<textarea name="reason" rows="3" placeholder="Patient transfer, department change, damage details, etc."></textarea></label>
+      <div class="button-grid">
+        {% if asset.status == 'available' %}<button name="action" value="take" class="primary">Take asset</button>{% endif %}
+        {% if asset.holder_id == logged_user.id or logged_user.role == 'office' %}<button name="action" value="return" class="primary">Confirm return</button>{% endif %}
+        <button name="action" value="transfer" class="secondary">Update location</button>
+        <button name="action" value="damage" class="danger-button">Report damage</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>Movement history</h2>
+  {% if transactions %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date & time</th><th>Action</th><th>Employee</th><th>From</th><th>To</th><th>Reason</th></tr></thead>
+      <tbody>
+      {% for row in transactions %}
+      <tr>
+        <td>{{ row.created_at }}</td>
+        <td>{{ row.action|replace('_',' ') }}</td>
+        <td>{{ row.employee_name or '-' }}{% if row.employee_code %} ({{ row.employee_code }}){% endif %}</td>
+        <td>{{ row.from_location_name or '-' }}</td>
+        <td>{{ row.to_location_name or '-' }}</td>
+        <td>{{ row.reason or '-' }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="empty">No movement history yet.</p>{% endif %}
+</section>
+
+<div class="detail-grid">
+  <section class="panel">
+    <h2>Return request history</h2>
+    {% if return_history %}
+    <div class="compact-list">
+      {% for row in return_history %}
+      <div>
+        <strong>{{ row.employee_name or '-' }}{% if row.employee_code %} ({{ row.employee_code }}){% endif %}</strong>
+        <span>{{ row.created_at }} · {{ row.response }}{% if row.need_reason %} · {{ row.need_reason }}{% endif %}{% if row.promised_return_at %} · Return by {{ row.promised_return_at }}{% endif %}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}<p class="empty">No return requests yet.</p>{% endif %}
+  </section>
+  <section class="panel">
+    <h2>Maintenance history</h2>
+    {% if maintenance_history %}
+    <div class="compact-list">
+      {% for row in maintenance_history %}
+      <div>
+        <strong>{{ row.issue_description }}</strong>
+        <span>{{ row.created_at }} · {{ row.status }}{% if row.reported_by_name %} · {{ row.reported_by_name }} ({{ row.reported_by_code }}){% endif %}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}<p class="empty">No maintenance records yet.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}
